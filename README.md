@@ -72,7 +72,7 @@ func main() {
 		// connect
 		log.Println("Dialing...")
 		var err error
-		Ws, err = bitstamp.NewWebSocket(WS_TIMEOUT)
+		Ws, err = bitstamp.NewWebSocket(WS_TIMEOUT, nil)
 		if err != nil {
 			log.Printf("Error connecting: %s", err)
 			time.Sleep(1 * time.Second)

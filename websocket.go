@@ -3,6 +3,8 @@ package bitstamp
 import (
 	"encoding/json"
 	"fmt"
+	"net/http"
+	"net/url"
 	"runtime"
 	"time"
 
@@ -55,7 +57,7 @@ func (s *WebSocket) Pong() {
 	s.ws.WriteJSON(a)
 }
 
-func NewWebSocket(t time.Duration) (*WebSocket, error) {
+func NewWebSocket(t time.Duration, pUrl *url.URL) (*WebSocket, error) {
 	var err error
 	s := &WebSocket{
 		quit:   make(chan bool, 1),
@@ -63,8 +65,15 @@ func NewWebSocket(t time.Duration) (*WebSocket, error) {
 		Errors: make(chan error),
 	}
 
-	// set up websocket
-	s.ws, _, err = websocket.DefaultDialer.Dial(_socketurl, nil)
+	dialer := websocket.DefaultDialer
+	if pUrl != nil {
+		dialer = &websocket.Dialer{
+			Proxy:            http.ProxyURL(pUrl),
+			HandshakeTimeout: 45 * time.Second,
+		}
+	}
+
+	s.ws, _, err = dialer.Dial(_socketurl, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error dialing websocket: %s", err)
 	}

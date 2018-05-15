@@ -103,11 +103,11 @@ type OrderBookItem struct {
 }
 
 type OpenOrder struct {
-	Id           int64   `json:"id,string"`
+	Id           float64 `json:"id"`
 	DateTime     string  `json:"datetime"`
 	Type         int     `json:"type,string"`
-	Price        float64 `json:"price,string"`
-	Amount       float64 `json:"amount,string"`
+	Price        float64 `json:"price"`
+	Amount       float64 `json:"amount"`
 	CurrencyPair string  `json:"currency_pair"`
 }
 
